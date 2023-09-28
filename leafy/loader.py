@@ -8,15 +8,29 @@ from pathlib import Path
 
 class ImageLoader(Dataset):
     def __init__(self, data_folder: Path, accept_globs: bool = True):
-        self.data_folder = data_folder
-        if accept_globs:
-            self.image_files = list(Path.cwd().glob(str(data_folder / "**/*.JPG")))
+        self.data_folder  = data_folder
+        self.accept_globs = accept_globs
+        
+        if self.accept_globs:
+            self.image_files = list(Path.cwd().glob(str(self.data_folder / "**/*.JPG")))
         else:
             assert self.data_folder.is_dir()
             self.image_files = list(self.data_folder.glob("**/*.JPG"))
             
         self.totensor = ToTensor()
+        self.fix_the_stupid_extension()
         
+    
+    def fix_the_stupid_extension(self):
+        for im in self.image_files:
+            if im.suffix == ".JPG":
+                im.rename(im.with_suffix(".jpg"))
+        
+        if self.accept_globs:
+            self.image_files = list(Path.cwd().glob(str(self.data_folder / "**/*.jpg")))
+        else:
+            assert self.data_folder.is_dir()
+            self.image_files = list(self.data_folder.glob("**/*.jpg"))
     
     @staticmethod
     def _get_fruit_and_disease(filename: str) -> Tuple[str, str]:
