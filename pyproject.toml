@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leafy"
+version = "0.0.1"
+authors = [
+    {name="Joep B"  , email="joepbarmentlo@gmail.com"},
+]
+requires-python = ">= 3.11"
+classifiers =[
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "torch",
+    "pathlib",
+    "Pillow",
+    "torchvision",
+    "seaborn",
+    "fire",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]  # list of folders that contain the packages (["."] by default)
+include = ["leafy"]  # package names should match these glob patterns (["*"] by default)

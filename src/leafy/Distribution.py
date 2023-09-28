@@ -6,7 +6,7 @@ from random import shuffle
 import matplotlib.colors as mcolors
 import numpy as np
 
-from .loader import ImageLoader
+from loader import ImageLoader
 
 color_list = list(mcolors.cnames.values())
 shuffle(color_list)    

@@ -7,11 +7,16 @@ import torch
 from pathlib import Path
 
 class ImageLoader(Dataset):
-    def __init__(self, data_folder: Path):
+    def __init__(self, data_folder: Path, accept_globs: bool = True):
         self.data_folder = data_folder
-        self.image_files = list(self.data_folder.glob("**/*.JPG"))
+        if accept_globs:
+            self.image_files = list(Path.cwd().glob(str(data_folder / "**/*.JPG")))
+        else:
+            assert self.data_folder.is_dir()
+            self.image_files = list(self.data_folder.glob("**/*.JPG"))
+            
         self.totensor = ToTensor()
-        assert self.data_folder.is_dir()
+        
     
     @staticmethod
     def _get_fruit_and_disease(filename: str) -> Tuple[str, str]:
