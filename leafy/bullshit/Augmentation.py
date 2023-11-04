@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PIL import Image
 from fire import Fire
-from .loader import ImageLoader
+from ..loader import ImageLoader
 from .utils import image_grid
 
 

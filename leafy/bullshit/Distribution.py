@@ -1,35 +1,25 @@
 from pathlib import Path
-
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from fire import Fire
 from random import shuffle
 import matplotlib.colors as mcolors
 import numpy as np
 
-from .loader import ImageLoader
+from ..loader import ImageLoader
 
 color_list = list(mcolors.cnames.values())
 shuffle(color_list)    
-
-def plot_class_distribution(data_folder: Path):
-    data_folder = Path(data_folder)
-    loader      = ImageLoader(data_folder)
-    
-    class_distribution = loader.get_class_distribution()
-    names              = list(class_distribution.keys())
-    values             = list(class_distribution.values())
-
-    fig = plt.figure(figsize = (18, 8))
-    ax  = fig.add_subplot(111)
-    ax.set_title(f"Class Distribution: {data_folder}")    
-    ax.bar(range(len(class_distribution)), values, tick_label=names, color=list(color_list)[:len(class_distribution)])
-    plt.show()
 
 def better_plot_class_distribution(data_folder: Path):
     data_folder = Path(data_folder)
     loader      = ImageLoader(data_folder)
         
     class_distribution = loader.get_better_class_distribution()
+    return class_distribution
+
+def show_class_distribution(class_distribution):
     fig = plt.figure(figsize = (18, 8 * len(class_distribution)))
     axes = fig.subplots(len(class_distribution), 2)
 
@@ -54,5 +44,6 @@ def better_plot_class_distribution(data_folder: Path):
     plt.show()
 
 def distribution(data_folder):
-    better_plot_class_distribution(data_folder)
+    class_distribution = better_plot_class_distribution(data_folder)
+    show_class_distribution(class_distribution)
     

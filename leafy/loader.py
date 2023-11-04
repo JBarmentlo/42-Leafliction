@@ -5,6 +5,9 @@ from collections import Counter
 from typing import Tuple
 import torch
 from pathlib import Path
+from typing import Optional
+from copy import deepcopy
+from torch import Tensor
 
 class ImageLoader(Dataset):
     def __init__(self, data_folder: Path, accept_globs: bool = True):
@@ -19,8 +22,7 @@ class ImageLoader(Dataset):
             
         self.totensor = ToTensor()
         self.fix_the_stupid_extension()
-        print(f"Initiated loader on folder {data_folder}. Found {len(self)} images.")
-        
+        print(f"Initiated loader on folder {data_folder.absolute()}. Found {len(self)} images.")
     
     def fix_the_stupid_extension(self):
         for im in self.image_files:
@@ -33,6 +35,18 @@ class ImageLoader(Dataset):
             assert self.data_folder.is_dir()
             self.image_files = list(self.data_folder.glob("**/*.jpg"))
     
+    def get_sub_loader(self, desired_fruit: str, desired_disease: Optional[str] = None):
+        new_image_paf_list = []
+        for i, paf in enumerate(self.image_files):
+            fruit, disease = self._get_fruit(paf), self._get_disease(paf)
+            if fruit == desired_fruit:
+                if desired_disease is None or disease == desired_disease:
+                    new_image_paf_list.append(paf)
+        
+        sub_loader = deepcopy(self)
+        sub_loader.image_files = new_image_paf_list
+        return sub_loader
+                
     @staticmethod
     def _get_fruit_and_disease(filename: str) -> Tuple[str, str]:
         fruit, *disease = filename.split("_")
@@ -72,6 +86,6 @@ class ImageLoader(Dataset):
     def __len__(self):
         return len(self.image_files)
     
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> Tuple[Tensor, str]:
         return self._get_image(self.image_files[index]), self._get_class(self.image_files[index])
         
