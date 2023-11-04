@@ -26,3 +26,6 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["leafy"]  # package names should match these glob patterns (["*"] by default)
+
+[project.scripts]
+leafliction = "leafy:cli"

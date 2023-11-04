@@ -19,6 +19,7 @@ class ImageLoader(Dataset):
             
         self.totensor = ToTensor()
         self.fix_the_stupid_extension()
+        print(f"Initiated loader on folder {data_folder}. Found {len(self)} images.")
         
     
     def fix_the_stupid_extension(self):

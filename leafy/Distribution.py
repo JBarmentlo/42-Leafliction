@@ -6,7 +6,7 @@ from random import shuffle
 import matplotlib.colors as mcolors
 import numpy as np
 
-from loader import ImageLoader
+from .loader import ImageLoader
 
 color_list = list(mcolors.cnames.values())
 shuffle(color_list)    
@@ -53,8 +53,6 @@ def better_plot_class_distribution(data_folder: Path):
 
     plt.show()
 
-plt.show()
-if __name__ == "__main__":
-    # Fire(plot_class_distribution)
-    Fire(better_plot_class_distribution)
+def distribution(data_folder):
+    better_plot_class_distribution(data_folder)
     

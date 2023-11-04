@@ -75,5 +75,5 @@ def augment_single_image_from_path(paf: Path):
     im = aug(paf)
     im.show()
 
-if __name__ == "__main__":
-    Fire(augment_single_image_from_path)
+def augmentation(data_folder):
+    augment_single_image_from_path(data_folder)

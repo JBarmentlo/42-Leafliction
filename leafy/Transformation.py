@@ -38,7 +38,7 @@ def transform_image(im: rgb_image) -> List[rgb_image]:
     
     return [mask, mask * im, shape_image, gaussian_img, landmarks, color_histogram]
 
-def do_the_thing(paf):
+def transformation(paf):
     im = to_tensor(Image.open(paf))
     images = transform_image(im)
     
