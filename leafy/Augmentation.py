@@ -3,6 +3,7 @@ from pathlib import Path
 from PIL import Image
 from fire import Fire
 from .loader import ImageLoader
+from .utils import image_grid
 
 
 from torchvision.transforms import RandomResizedCrop
@@ -30,7 +31,6 @@ class Augmentinator:
     def save_image_row(self, ims: Dict[str, Tensor], path: Path):
         for transform_name, im in ims.items():
             savepaf = (path.parent / (path.with_suffix("").name + '_' + transform_name)).with_suffix(path.suffix)
-            print(f"{savepaf = }")
             to_pil_image(im).save(savepaf)
             
     
@@ -73,7 +73,10 @@ def augment_single_image_from_path(paf: Path):
     transformations = make_transforms(im.shape)
     aug = Augmentinator(transformations)
     im = aug(paf)
-    im.show()
-
-def augmentation(data_folder):
-    augment_single_image_from_path(data_folder)
+    return im
+def augmentation(*image_pafs):
+    augs = []
+    for image_paf in image_pafs:
+        auged = augment_single_image_from_path(image_paf)
+        augs.append(auged)
+    image_grid(augs, rows=len(augs), cols=1).show()

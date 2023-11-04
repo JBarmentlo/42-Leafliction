@@ -8,6 +8,7 @@ import torch
 import cv2
 
 from .types import rgb_image, rgb_image_cv, mask
+from .utils import image_grid
 
 def tensor_to_cv(im: rgb_image) -> rgb_image_cv:
     return np.array(to_pil_image(im))[:,:,::-1]
@@ -40,27 +41,7 @@ def transform_image(im: rgb_image) -> List[rgb_image]:
     
     return [mask, mask * im, shape_image, gaussian_img, landmarks, color_histogram]
 
-def image_grid(imgs, rows, cols) -> Image.Image:
-    assert len(imgs) == rows*cols
 
-    print(f"{imgs[0].shape = }")
-    w, h = imgs[0].shape
-    grid = Image.new('RGB', size=(cols*w, rows*h))
-    grid_w, grid_h = grid.size
-    
-    for i, img in enumerate(imgs):
-        img = to_pil_image(img)
-        grid.paste(img, box=(i%cols*w, i//cols*h))
-    return grid
-
-
-# from io import BytesIO
-# def altair_converter(chart):
-#     with BytesIO() as buffer:
-#         # chart.save(buffer, 'png')
-#         chart.save('chart.png')
-        
-        
 
 def transformation(paf):
     im = to_tensor(Image.open(paf))
