@@ -29,17 +29,43 @@ def transform_image(im: rgb_image) -> List[rgb_image]:
     gaussian_img = cv_to_tensor(pcv.gaussian_blur(img=tensor_to_cv(im), ksize=(5, 5), sigma_x=0, sigma_y=None))
     homolog_pts, start_pts, stop_pts, ptvals, chain, max_dist = pcv.homology.acute(img=cv_im, mask=mask.to(torch.uint8).numpy() * 255, win=25, threshold=90)
 
-    imm = cv_im
+    cv_im = np.asarray(cv_im, dtype=np.float32) / 255.
     for point in homolog_pts:
-        imm = cv2.circle(imm, point[0], 1, (255, 0, 0), 2)
-    landmarks = cv_to_tensor(imm)
+        cv_im = cv2.circle(cv_im, point[0], 1, (255, 0, 0), 2)
+    cv_im = np.asarray(cv_im * 255, dtype=np.uint8)
+    landmarks = cv_to_tensor(cv_im)
     color_histogram, _ = pcv.visualize.histogram(img=tensor_to_cv(im), mask=mask, hist_data=True, bins=30)
-    
+    color_histogram.save("/tmp/chart.png")
+    color_histogram = to_tensor(Image.open("/tmp/chart.png").convert('RGB'))
     
     return [mask, mask * im, shape_image, gaussian_img, landmarks, color_histogram]
+
+def image_grid(imgs, rows, cols) -> Image.Image:
+    assert len(imgs) == rows*cols
+
+    print(f"{imgs[0].shape = }")
+    w, h = imgs[0].shape
+    grid = Image.new('RGB', size=(cols*w, rows*h))
+    grid_w, grid_h = grid.size
+    
+    for i, img in enumerate(imgs):
+        img = to_pil_image(img)
+        grid.paste(img, box=(i%cols*w, i//cols*h))
+    return grid
+
+
+# from io import BytesIO
+# def altair_converter(chart):
+#     with BytesIO() as buffer:
+#         # chart.save(buffer, 'png')
+#         chart.save('chart.png')
+        
+        
 
 def transformation(paf):
     im = to_tensor(Image.open(paf))
     images = transform_image(im)
+    grid = image_grid(images, 3, 2)
+    grid.show()
     
     
