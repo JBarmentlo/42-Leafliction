@@ -74,10 +74,13 @@ def train(data_folder):
     print("Saving model to ./model_save/model.pt")
     torch.save(model.state_dict(), "./model_save/model.pt")
     
-    print("Dumping class labels to json")
+    print("Dumping class labels to json.")
     with open("./model_save/classes.json", "w+") as f:
         json.dump({"classes": image_db.class_labels}, f)
     
-    print("Copying images for some reason")
-    shutil.rmtree("./model_save/images", ignore_errors=True)
+    print("Copying images for some reason.")
     shutil.copytree(data_folder, "./model_save/images")
+    
+    print("Compressing archive.")
+    shutil.make_archive("model_save", 'zip', "./model_save")
+    shutil.rmtree("./model_save", ignore_errors=True)

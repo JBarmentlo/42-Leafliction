@@ -4,6 +4,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from torchvision.transforms.functional import to_tensor, to_pil_image
 import torch.nn.functional as F
+import shutil
+import sys
 
 from .model import BasicClassifier
 from .bullshit.Transformation import get_mask
@@ -26,6 +28,13 @@ def double_im_with_text(im1, im2, pred) -> Image.Image:
         
 
 def predict(image_path):
+    zip_archive = Path("./model_save.zip")
+    
+    if not zip_archive.exists():
+        print("Train first please")
+        sys.exit(0)
+        
+    shutil.unpack_archive(str(zip_archive), "./model_save")
     model_folder = Path("./model_save")
     
     with (model_folder / "classes.json").open("r") as f:
