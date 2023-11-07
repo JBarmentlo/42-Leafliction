@@ -68,7 +68,7 @@ def train(data_folder):
     
     
     preds, gts = eval_model(test_loader, model, model.preprocess)
-    print(f"Accuracy on validation set: {(gts == preds).to(torch.float).mean()}%")
+    print(f"Accuracy on validation set: {(gts == preds).to(torch.float).mean() * 100:.0f}%")
 
     Path("./model_save").mkdir(exist_ok=True, parents=True)
     print("Saving model to ./model_save/model.pt")
@@ -79,4 +79,5 @@ def train(data_folder):
         json.dump({"classes": image_db.class_labels}, f)
     
     print("Copying images for some reason")
+    shutil.rmtree("./model_save/images", ignore_errors=True)
     shutil.copytree(data_folder, "./model_save/images")
