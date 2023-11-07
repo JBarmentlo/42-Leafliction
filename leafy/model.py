@@ -10,18 +10,10 @@ class BasicClassifier(Module):
         resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
         modules = list(resnet.children())[:-1]
         self.resnet = nn.Sequential(*modules)
-        self.fc = nn.Linear(2048, 8)
+        self.fc = nn.Linear(2048, num_classes)
+        self.preprocess = ResNet50_Weights.DEFAULT.transforms()
         
     def forward(self, x):
         x = self.resnet(x)
         x = self.fc(x.view(x.size(0), -1))
         return x
-        # return F.softmax(x, dim=1) # will break for unbatched data
-
-
-net = BasicClassifier(num_classes = 8)
-net = net.cuda()
-
-
-preprocess = ResNet50_Weights.DEFAULT.transforms()
-# resnet = resnet50(weights=ResNet50_Weights.DEFAULT)

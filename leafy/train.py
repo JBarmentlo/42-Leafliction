@@ -7,24 +7,13 @@ from torch.utils.data import DataLoader, random_split
 from torchvision.models import resnet50, ResNet50_Weights
 from torch.optim import Adam
 from tqdm import tqdm
+import json
+import shutil
+from pathlib import Path
 
 from .loader import ImageLoader
 from .trainloader import ImageDataset
-
-class BasicClassifier(Module):
-    def __init__(self, num_classes):
-        super(BasicClassifier, self).__init__()
-        resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
-        modules = list(resnet.children())[:-1]
-        self.resnet = nn.Sequential(*modules)
-        self.fc = nn.Linear(2048, num_classes)
-        self.preprocess = ResNet50_Weights.DEFAULT.transforms()
-        
-    def forward(self, x):
-        x = self.resnet(x)
-        x = self.fc(x.view(x.size(0), -1))
-        return x
-
+from .model import BasicClassifier
 
 def initialise_dataset(folder):
     data_folder = Path(folder)
@@ -37,7 +26,7 @@ def train_model(data_loader, model, preprocess):
     model = model.cuda()
     optim = Adam(model.parameters())
 
-    for epoch in range(1):
+    for _ in range(1):
         for x, y in tqdm(data_loader):
             optim.zero_grad()
             x = x.cuda()
@@ -47,7 +36,7 @@ def train_model(data_loader, model, preprocess):
             loss = ce_loss(y_hat, y)
             loss.backward()
             optim.step()
-            print(loss)
+            # print(loss)
 
     return model
 
@@ -70,6 +59,7 @@ def eval_model(data_loader, model, preprocess):
 def train(data_folder):
     image_db = initialise_dataset(data_folder)
     train_set, test_set = random_split(image_db, [0.8, 0.2])
+    print(f"Split dataset into train: {len(train_set)} & validation: {len(test_set)}")
     train_loader = DataLoader(train_set, 32, shuffle = True)
     model = BasicClassifier(len(image_db.class_labels))
     model = train_model(train_loader, model, model.preprocess)
@@ -78,4 +68,15 @@ def train(data_folder):
     
     
     preds, gts = eval_model(test_loader, model, model.preprocess)
-    print(f"PERF: {(gts == preds).to(torch.float).mean()}")
+    print(f"Accuracy on validation set: {(gts == preds).to(torch.float).mean()}%")
+
+    Path("./model_save").mkdir(exist_ok=True, parents=True)
+    print("Saving model to ./model_save/model.pt")
+    torch.save(model.state_dict(), "./model_save/model.pt")
+    
+    print("Dumping class labels to json")
+    with open("./model_save/classes.json", "w+") as f:
+        json.dump({"classes": image_db.class_labels}, f)
+    
+    print("Copying images for some reason")
+    shutil.copytree(data_folder, "./model_save/images")
