@@ -8,7 +8,6 @@ def image_grid(imgs, rows, cols) -> Image.Image:
     images = []
     if isinstance(imgs[0], Tensor):
         for i, im in enumerate(imgs):
-            print(i)
             images.append(to_pil_image(im))
     elif isinstance(imgs[0], Image.Image):
         images = imgs
