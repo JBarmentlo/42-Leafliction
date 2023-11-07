@@ -1,11 +1,8 @@
+import sys
 from pathlib import Path
 
 from PIL import Image
 from fire import Fire
-from ..loader import ImageLoader
-from .utils import image_grid
-
-
 from torchvision.transforms import RandomResizedCrop
 from torchvision.transforms import RandomHorizontalFlip
 from torchvision.transforms import RandomRotation
@@ -17,6 +14,9 @@ from typing import Dict, Callable, Tuple
 from torch import Tensor
 from torchvision.transforms.functional import to_pil_image, to_tensor
 import torch
+
+from ..loader import ImageLoader
+from .utils import image_grid
 
 class Augmentinator:
     def __init__(self, augmentations: Dict[str, Callable[[Tensor], Tensor]]):
@@ -74,8 +74,13 @@ def augment_single_image_from_path(paf: Path):
     aug = Augmentinator(transformations)
     im = aug(paf)
     return im
+
 def augmentation(*image_pafs):
     augs = []
+    if len(image_pafs) == 0:
+        print("Please provide a path as an argument")
+        sys.exit(0)
+
     for image_paf in image_pafs:
         auged = augment_single_image_from_path(image_paf)
         augs.append(auged)
