@@ -70,6 +70,8 @@ def train(data_folder):
     preds, gts = eval_model(test_loader, model, model.preprocess)
     print(f"Accuracy on validation set: {(gts == preds).to(torch.float).mean() * 100:.0f}%")
 
+    shutil.rmtree("./model_save", ignore_errors=True)
+    shutil.rmtree("./model_save.zip", ignore_errors=True)
     Path("./model_save").mkdir(exist_ok=True, parents=True)
     print("Saving model to ./model_save/model.pt")
     torch.save(model.state_dict(), "./model_save/model.pt")

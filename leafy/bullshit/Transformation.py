@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import List
 from plantcv import plantcv as pcv
 import numpy as np
-from torchvision.transforms.functional import to_pil_image, to_tensor
+from torchvision.transforms.functional import to_pil_image, to_tensor, adjust_contrast
 from torch import Tensor
 from PIL import Image
 import torch
@@ -47,8 +47,8 @@ def transform_image(im: rgb_image) -> List[rgb_image]:
     color_histogram, _ = pcv.visualize.histogram(img=tensor_to_cv(im), mask=mask, hist_data=True, bins=30)
     color_histogram.save("/tmp/chart.png")
     color_histogram = to_tensor(Image.open("/tmp/chart.png").convert('RGB'))
+    return [mask, mask * im, shape_image, adjust_contrast(im, 2), landmarks, color_histogram]
     
-    return [mask, mask * im, shape_image, gaussian_img, landmarks, color_histogram]
 
 
 
