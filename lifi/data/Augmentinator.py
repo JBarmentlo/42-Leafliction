@@ -46,7 +46,7 @@ class Augmentinator:
         return self.make_image_row(augmented)
         
 
-def make_transforms(imshape: Tuple[int,int,int]) -> Dict[str, Callable[[Tensor], Tensor]]:
+def default_transforms(imshape: Tuple[int,int,int]) -> Dict[str, Callable[[Tensor], Tensor]]:
     rc         = RandomResizedCrop(size=imshape[1:], scale=(0.5, 1.0), ratio=(0.75, 1.3333333333333333), interpolation=2)
     flip       = RandomHorizontalFlip(p=1.0)
     rot        = RandomRotation(degrees=[0, 360])
@@ -69,7 +69,7 @@ def make_transforms(imshape: Tuple[int,int,int]) -> Dict[str, Callable[[Tensor],
 def augment_single_image_from_path(paf: Path):
     im = to_tensor(Image.open(paf))
 
-    transformations = make_transforms(im.shape)
+    transformations = default_transforms(im.shape)
     aug = Augmentinator(transformations)
     im = aug(paf)
     return im

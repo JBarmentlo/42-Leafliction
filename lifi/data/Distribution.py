@@ -8,6 +8,7 @@ import matplotlib.colors as mcolors
 import numpy as np
 
 from .Loader import ImageDataset
+from .labels import LabelEnum
 
 color_list = list(mcolors.cnames.values())
 shuffle(color_list)    
@@ -31,6 +32,7 @@ def show_class_distribution(class_distribution):
         fruit_distribution = class_distribution[fruit]
         names              = list(fruit_distribution.keys())
         values             = list(fruit_distribution.values())
+        
         pieax = ax[0]
         pieax.set_title(f"Class Distribution: {fruit}")    
         pieax.pie(values, labels=names, colors=list(color_list)[color_offset:color_offset+len(names)], autopct='%1.1f%%')

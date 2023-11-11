@@ -6,6 +6,9 @@ import torch
 from typing import Tuple
 from collections import Counter
 
+from .labels import LabelEnum
+
+
 class ImageDataset(Dataset):
     def __init__(self, data_folder: Path):
         self.data_folder = data_folder
@@ -14,7 +17,7 @@ class ImageDataset(Dataset):
 
     def get_better_class_distribution(self):
         out = {}
-        class_lst = [im_class for _, im_class in self]
+        class_lst = [LabelEnum(class_number).name for _, class_number in self]
         class_counter =  Counter(class_lst)
         for k, v in class_counter.items():
             fruit, disease = self._get_fruit_and_disease(k)
@@ -28,8 +31,8 @@ class ImageDataset(Dataset):
         disease = '_'.join(disease)
         return fruit, disease
     
-    def _get_class(self, path: Path) -> str:
-        return path.parent.name
+    def _get_class(self, path: Path) -> int:
+        return LabelEnum[path.parent.name].value
 
     def _get_image(self, path: Path) -> torch.Tensor:
         im = Image.open(path)
@@ -38,6 +41,6 @@ class ImageDataset(Dataset):
     def __len__(self):
         return len(self.image_files)
     
-    def __getitem__(self, index) -> Tuple[torch.Tensor, str]:
+    def __getitem__(self, index) -> Tuple[torch.Tensor, int]:
         return self._get_image(self.image_files[index]), self._get_class(self.image_files[index])
         
