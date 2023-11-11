@@ -14,6 +14,8 @@ class ImageDataset(Dataset):
         self.data_folder = data_folder
         self.image_files = list(self.data_folder.glob("**/*.jpg"))
         self.totensor    = ToTensor()
+        print(f"Initialised ImageDataset on folder {self.data_folder} with {len(self.image_files)} images.")
+
 
     def get_better_class_distribution(self):
         out = {}
