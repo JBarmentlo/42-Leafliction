@@ -6,14 +6,15 @@ from torchvision.transforms.functional import to_tensor, to_pil_image
 
 from .data.Loader import ImageDataset
 from .train import eval_model
-from .models import BasicClassifier
+from .models.basic import BasicClassifier
 from .data.labels import LabelEnum
-from .utils import double_im_with_text
+from .utils.image import double_im_with_text
+from .data.Transformation import get_mask
 
 def predict_file(image_paf: Path):
-    device = 'cpu'
+    device = "cpu"
     net = BasicClassifier()
-    state_dict = torch.load('leaf_classifier.pt', map_location=device)
+    state_dict = torch.load("leaf_classifier.pt", map_location=device)
     net.load_state_dict(state_dict)
     net = net.eval()
     im = to_tensor(Image.open(str(image_paf)))
@@ -27,19 +28,22 @@ def predict_file(image_paf: Path):
 def evaluate_folder(data_folder: str):
     print("Evaluating: ", data_folder)
     folder = Path(data_folder)
-    device = 'cpu'
+    device = "cpu"
     net = BasicClassifier()
-    state_dict = torch.load('leaf_classifier.pt', map_location=device)
+    state_dict = torch.load("leaf_classifier.pt", map_location=device)
     net.load_state_dict(state_dict)
-    
+
     test_db = ImageDataset(folder)
     test_loader = DataLoader(test_db, batch_size=1, shuffle=False)
-    
+
     print(eval_model(test_loader, net, device))
+
 
 def predict(image_path):
     pred = predict_file(Path(image_path))
     im = Image.open(image_path)
-    double_im_with_text(im, im, pred).show()
-    
-    
+    mask = get_mask
+    im = to_tensor(Image.open(image_path))
+    mask = get_mask(im)
+
+    double_im_with_text(to_pil_image(im), to_pil_image(im * mask), pred).show()

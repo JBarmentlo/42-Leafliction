@@ -3,7 +3,7 @@ requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "leafy"
+name = "lifi"
 version = "0.0.1"
 authors = [
     {name="Joep B"  , email="joepbarmentlo@gmail.com"},
@@ -26,10 +26,8 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = [
-    "leafy",
     "lifi"
     ]  # package names should match these glob patterns (["*"] by default)
 
 [project.scripts]
-leafliction = "leafy:cli"
-lifi = "lifi:cli"
+lifli = "lifi.cli:cli_func"

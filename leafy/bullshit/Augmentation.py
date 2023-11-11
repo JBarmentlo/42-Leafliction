@@ -18,52 +18,70 @@ import torch
 from ..loader import ImageLoader
 from .utils import image_grid
 
+
 class Augmentinator:
     def __init__(self, augmentations: Dict[str, Callable[[Tensor], Tensor]]):
         self.augmentations = augmentations
-    
+
     def _apply_augment(self, im: Tensor) -> Dict[str, Tensor]:
         return {name: aug(im) for name, aug in self.augmentations.items()}
-    
+
     def make_image_row(self, ims: Dict[str, Tensor]):
         return to_pil_image(torch.cat([im for im in ims.values()], dim=2))
 
     def save_image_row(self, ims: Dict[str, Tensor], path: Path):
         for transform_name, im in ims.items():
-            savepaf = (path.parent / (path.with_suffix("").name + '_' + transform_name)).with_suffix(path.suffix)
+            savepaf = (
+                path.parent
+                / (path.with_suffix("").name + "_" + transform_name)
+            ).with_suffix(path.suffix)
             to_pil_image(im).save(savepaf)
-            
-    
+
     def __call__(self, path: Path) -> Image.Image:
         if isinstance(path, str):
             path = Path(path)
 
         assert path.is_file(), f"Path {path} is not a file"
-        assert path.suffix.lower() in [".jpg", ".png"], f"Path {path} is not a jpg or png file"
-        
+        assert path.suffix.lower() in [
+            ".jpg",
+            ".png",
+        ], f"Path {path} is not a jpg or png file"
+
         im = to_tensor(Image.open(path))
-        augmented =  self._apply_augment(im)
+        augmented = self._apply_augment(im)
         self.save_image_row(augmented, path)
         return self.make_image_row(augmented)
-        
 
-def make_transforms(imshape: Tuple[int,int,int]) -> Dict[str, Callable[[Tensor], Tensor]]:
-    rc         = RandomResizedCrop(size=imshape[1:], scale=(0.5, 1.0), ratio=(0.75, 1.3333333333333333), interpolation=2)
-    flip       = RandomHorizontalFlip(p=1.0)
-    rot        = RandomRotation(degrees=[0, 360])
-    gauss      = GaussianBlur(kernel_size=5, sigma=(0.1, 3.0))
+
+def make_transforms(
+    imshape: Tuple[int, int, int]
+) -> Dict[str, Callable[[Tensor], Tensor]]:
+    rc = RandomResizedCrop(
+        size=imshape[1:],
+        scale=(0.5, 1.0),
+        ratio=(0.75, 1.3333333333333333),
+        interpolation=2,
+    )
+    flip = RandomHorizontalFlip(p=1.0)
+    rot = RandomRotation(degrees=[0, 360])
+    gauss = GaussianBlur(kernel_size=5, sigma=(0.1, 3.0))
     contraster = RandomAutocontrast(p=1.0)
-    shear      = RandomAffine(degrees=[0,360], translate =(0.1, 0.3), scale=(0.9, 1.1), shear=(-30, 30))
+    shear = RandomAffine(
+        degrees=[0, 360],
+        translate=(0.1, 0.3),
+        scale=(0.9, 1.1),
+        shear=(-30, 30),
+    )
 
     transformations = {
-        "crop"    : rc,
-        "flip"    : flip,
+        "crop": rc,
+        "flip": flip,
         "rotation": rot,
-        "blur"    : gauss,
+        "blur": gauss,
         "contrast": contraster,
-        "shear"   : shear
+        "shear": shear,
     }
-    
+
     return transformations
 
 
@@ -74,6 +92,7 @@ def augment_single_image_from_path(paf: Path):
     aug = Augmentinator(transformations)
     im = aug(paf)
     return im
+
 
 def augmentation(*image_pafs):
     augs = []

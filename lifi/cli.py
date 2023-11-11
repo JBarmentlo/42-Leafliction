@@ -7,16 +7,20 @@ from .data.Transformation import transformation
 from .train import train
 from .predict import predict, evaluate_folder
 
-def cli():
-    Fire({
-        "fix" : fix_jpg_extensions,
-        "d"   : distribution,
-        "a"   : augmentation,
-        "t"   : transformation,
-        'tt'  : train,
-        "p"   : predict,
-        "eval": evaluate_folder
-    })
+
+def cli_func():
+    Fire(
+        {
+            "fix": fix_jpg_extensions,
+            "d": distribution,
+            "a": augmentation,
+            "t": transformation,
+            "tt": train,
+            "p": predict,
+            "eval": evaluate_folder,
+        }
+    )
+
 
 if __name__ == "__main__":
-    cli()
+    cli_func()
