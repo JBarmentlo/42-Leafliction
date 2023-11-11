@@ -15,8 +15,7 @@ from torch import Tensor
 from torchvision.transforms.functional import to_pil_image, to_tensor
 import torch
 
-from ..loader import ImageLoader
-from .utils import image_grid
+from ..utils.image import image_grid
 
 class Augmentinator:
     def __init__(self, augmentations: Dict[str, Callable[[Tensor], Tensor]]):
