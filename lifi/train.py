@@ -64,7 +64,7 @@ def eval_model(test_loader: DataLoader, net: torch.nn.Module, device = 'gpu' if 
 
 
 
-def train(data_folder: Path, epochs = 2, device = 'cuda' if torch.cuda.is_available() else 'cpu'):
+def train(data_folder: Path, epochs = 1, device = 'cuda' if torch.cuda.is_available() else 'cpu'):
     data_folder = Path("./images")
     db = ImageDataset(data_folder)
     train_loader, test_loader = prepare_data(db)
@@ -92,4 +92,4 @@ def train(data_folder: Path, epochs = 2, device = 'cuda' if torch.cuda.is_availa
         report = eval_model(test_loader, net, device)
         print(report)
     
-    net.state_dict.save("leaf_classifier.pt")
+    torch.save(net.state_dict(), "leaf_classifier.pt")
