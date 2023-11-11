@@ -5,6 +5,7 @@ from .data.Distribution import distribution
 from .data.Augmentinator import augmentation
 from .data.Transformation import transformation
 from .train import train
+from .predict import predict, evaluate_folder
 
 def cli():
     Fire({
@@ -12,7 +13,9 @@ def cli():
         "d"   : distribution,
         "a"   : augmentation,
         "t"   : transformation,
-        'tt'  : train
+        'tt'  : train,
+        "p"   : predict,
+        "eval": evaluate_folder
     })
 
 if __name__ == "__main__":

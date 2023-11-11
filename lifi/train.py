@@ -24,11 +24,12 @@ def get_label_probabilities(db: ImageDataset):
 
 
 def prepare_data(db: ImageDataset):
+    torch.manual_seed(42)
     train_db, test_db = random_split(db, [0.7, 0.3])
     label_probas = get_label_probabilities(train_db)
     sampler = WeightedRandomSampler(label_probas, len(train_db))
-    train_loader = DataLoader(train_db, 32, shuffle=True, num_workers=4)
-    test_loader  = DataLoader(test_db, 32, shuffle=True, num_workers=4)
+    train_loader = DataLoader(train_db, 32, num_workers=4, sampler=sampler)
+    test_loader  = DataLoader(test_db, 32, num_workers=4)
     return train_loader, test_loader
 
 
@@ -40,7 +41,7 @@ def get_transforms(db):
     ]), p=0.1)
     return transforms
 
-def eval_model(test_loader: DataLoader, net: torch.nn.Module, device = 'gpu' if torch.cuda.is_available() else 'cpu'):
+def eval_model(test_loader: DataLoader, net: torch.nn.Module, device = 'cuda' if torch.cuda.is_available() else 'cpu'):
     preds, gts = [], []
 
     net = net.to(device)
@@ -50,7 +51,7 @@ def eval_model(test_loader: DataLoader, net: torch.nn.Module, device = 'gpu' if 
         x = x.to(device)
         x = net.preprocess(x)
         y = y.to(device)
-        y_hat = torch.argmax(net(x), dim=1)
+        y_hat = torch.argmax(torch.softmax(net(x), dim=1), dim=1)
         preds.append(y_hat.cpu())
         gts.append(y.cpu())
     

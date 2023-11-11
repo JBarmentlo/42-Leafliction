@@ -34,6 +34,12 @@ class ImageDataset(Dataset):
         return fruit, disease
     
     def _get_class(self, path: Path) -> int:
+        # print(f"{path = }")
+        # print(f"{path.parent.name = }")
+        # print(f"{LabelEnum[path.parent.name].value = }")
+        # print(f"{LabelEnum(value).name = }")
+        # print()
+        
         return LabelEnum[path.parent.name].value
 
     def _get_image(self, path: Path) -> torch.Tensor:

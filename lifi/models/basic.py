@@ -4,8 +4,10 @@ from torchvision.models import resnet50, ResNet50_Weights
 from icecream import ic
 from torch.nn import Module
 
+from ..data.labels import LabelEnum
+
 class BasicClassifier(Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes = len(LabelEnum)):
         super(BasicClassifier, self).__init__()
         resnet          = resnet50(weights=ResNet50_Weights.DEFAULT)
         modules         = list(resnet.children())[:-1]
