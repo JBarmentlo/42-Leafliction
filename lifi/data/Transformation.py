@@ -7,7 +7,6 @@ from torch import Tensor
 from PIL import Image
 import torch
 import cv2
-from icecream import ic
 from copy import deepcopy
 import numpy as np
 
@@ -34,7 +33,6 @@ def transform_image(im: Tensor) -> List[Tensor]:
     gaussian_img = cv_to_tensor(pcv.gaussian_blur(img=tensor_to_cv(im), ksize=(5, 5), sigma_x=0, sigma_y=None))
     try:
         homolog_pts, start_pts, stop_pts, ptvals, chain, max_dist = pcv.homology.acute(img=cv_im, mask=mask.to(torch.uint8).numpy() * 255, win=25, threshold=90)
-        ic(homolog_pts, start_pts, stop_pts)
         cv_im = np.asarray(cv_im, dtype=np.float32) / 255.
         for point in homolog_pts:
             cv_im = cv2.circle(cv_im, point[0], 3, (100, 0, 255), 2)
@@ -66,7 +64,6 @@ def transformation(paf, dest = None):
         dest.mkdir(exist_ok=True)
         for im_paf in loader.image_files:
             im_name = Path(im_paf).name
-            print(f"{im_paf = }")
             im = to_tensor(Image.open(im_paf))
             transformed_images = transform_image(im)
             for transformed_image, name in zip(transformed_images, ['mask', 'filtered', 'shapeim', 'gaussian', 'landmarks', 'color_hist']):
