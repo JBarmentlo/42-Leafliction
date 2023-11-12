@@ -12,12 +12,12 @@ def cli_func():
     Fire(
         {
             "fix": fix_jpg_extensions,
-            "d": distribution,
-            "a": augmentation,
-            "t": transformation,
-            "tt": train,
-            "p": predict,
-            "eval": evaluate_folder,
+            "distribution": distribution,
+            "augmentation": augmentation,
+            "transformation": transformation,
+            "train": train,
+            "predict": predict,
+            "evaluate_folder": evaluate_folder,
         }
     )
 

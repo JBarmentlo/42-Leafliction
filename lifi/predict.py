@@ -11,10 +11,11 @@ from .data.labels import LabelEnum
 from .utils.image import double_im_with_text
 from .data.Transformation import get_mask
 
+
 def predict_file(image_paf: Path):
     device = "cpu"
     net = BasicClassifier()
-    state_dict = torch.load("leaf_classifier.pt", map_location=device)
+    state_dict = torch.load("data/leaf_classifier.pt", map_location=device)
     net.load_state_dict(state_dict)
     net = net.eval()
     im = to_tensor(Image.open(str(image_paf)))
@@ -30,7 +31,7 @@ def evaluate_folder(data_folder: str):
     folder = Path(data_folder)
     device = "cpu"
     net = BasicClassifier()
-    state_dict = torch.load("leaf_classifier.pt", map_location=device)
+    state_dict = torch.load("data/leaf_classifier.pt", map_location=device)
     net.load_state_dict(state_dict)
 
     test_db = ImageDataset(folder)

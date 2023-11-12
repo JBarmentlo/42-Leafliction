@@ -69,7 +69,7 @@ def transform_image(im: Tensor) -> List[Tensor]:
         cv_im = np.asarray(cv_im * 255, dtype=np.uint8)
         landmarks = cv_to_tensor(cv_im)
     except Exception as e:
-        e = 'lol'
+        e
         landmarks = im
 
     color_histogram, _ = pcv.visualize.histogram(

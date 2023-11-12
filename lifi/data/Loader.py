@@ -3,8 +3,10 @@ from PIL import Image
 from torchvision.transforms import ToTensor
 from pathlib import Path
 import torch
-from typing import Tuple
+from typing import Tuple, Sequence
 from collections import Counter
+from tqdm import tqdm
+import shutil
 
 from .labels import LabelEnum
 
@@ -18,6 +20,21 @@ class ImageDataset(Dataset):
             f"Initialised ImageDataset on folder {self.data_folder} with \
             {len(self.image_files)} images."
         )
+
+    def save(self, dest_folder: Path):
+        dest_folder.mkdir(parents=True, exist_ok=True)
+        for paf in tqdm(self.image_files, desc="Copying images."):
+            dest = dest_folder / paf.relative_to(self.data_folder)
+            shutil.copy(paf, dest)
+    
+    def save_subset(self, dest_folder: Path, indices: Sequence[int]):
+        dest_folder.mkdir(parents=True, exist_ok=True)
+        for i in tqdm(indices, desc="Copying images."):
+            paf = self.image_files[i]
+            dest = dest_folder / paf.relative_to(self.data_folder)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(paf, dest)
+            
 
     def get_better_class_distribution(self):
         out = {}
@@ -36,12 +53,6 @@ class ImageDataset(Dataset):
         return fruit, disease
 
     def _get_class(self, path: Path) -> int:
-        # print(f"{path = }")
-        # print(f"{path.parent.name = }")
-        # print(f"{LabelEnum[path.parent.name].value = }")
-        # print(f"{LabelEnum(value).name = }")
-        # print()
-
         return LabelEnum[path.parent.name].value
 
     def _get_image(self, path: Path) -> torch.Tensor:

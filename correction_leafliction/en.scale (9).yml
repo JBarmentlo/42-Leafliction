@@ -1,0 +1,193 @@
+---
+
+comment: ''
+introduction_md: |
+  - Remain polite, courteous, respectful and constructive
+  throughout the evaluation process. The well-being of the community
+  depends on it.
+
+  - Identify with the person (or the group) evaluated the eventual
+  dysfunctions of the work. Take the time to discuss
+  and debate the problems you have identified.
+
+  - You must consider that there might be some difference in how your
+  peers might have understood the project's instructions and the
+  scope of its functionalities. Always keep an open mind and grade
+  him/her as honestly as possible. The pedagogy is valid only and
+  only if peer-evaluation is conducted seriously.
+
+
+disclaimer_md: ''
+
+guidelines_md: |
+  - Only grade the work that is in the student or group's
+  GiT repository.
+
+  - Double-check that the GiT repository belongs to the student
+  or the group. Ensure that the work is for the relevant project
+  and also check that "git clone" is used in an empty folder.
+
+  - Check carefully that no malicious aliases was used to fool you
+  and make you evaluate something other than the content of the
+  official repository.
+
+  - To avoid any surprises, carefully check that both the evaluating
+  and the evaluated students have reviewed the possible scripts used
+  to facilitate the grading.
+
+  - If the evaluating student has not completed that particular
+  project yet, it is mandatory for this student to read the
+  entire subject prior to starting the defence.
+
+  - Use the flags available on this scale to signal an empty repository,
+  non-functioning program, a norm error, cheating etc. In these cases,
+  the grading is over and the final grade is 0 (or -42 in case of
+  cheating). However, with the exception of cheating, you are
+  encouraged to continue to discuss your work (even if you have not
+  finished it) in order to identify any issues that may have caused
+  this failure and avoid repeating the same mistake in the future.
+  
+  - Remember that for the duration of the defence, no segfault,
+  no other unexpected, premature, uncontrolled or unexpected
+  termination of the program, else the final grade is 0. Use the
+  appropriate flag. 
+  You should never have to edit any file except the configuration file if it exists.
+  If you want to edit a file, take the time to explicit the reasons with the 
+  evaluated student and make sure both of you are okay with this.
+
+  - You must also verify the absence of memory leaks. Any memory allocated on the heap must
+  be properly freed before the end of execution.
+  You are allowed to use any of the different tools available on the computer, such as
+  leaks, valgrind, or e_fence. In case of memory leaks, tick the appropriate flag.
+sections:
+
+# **************************************************************************** #
+#                                                                              #
+#                                Mandatory part                                #
+#                                                                              #
+# **************************************************************************** #
+- name: Mandatory part
+  description: ''
+  questions:
+  - name: Ex00 American apple Pie
+    guidelines: |
+
+      Read the code, check that it connects to the Data Warehouse with the docker ports
+    
+      <code>
+      docker-compose ps
+      </code>
+
+      Run the code and a pie chart should appear
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 10
+      name: Rigor
+    - percentage: 10
+      name: Algorithms & AI
+    - percentage: 10
+      name: DB & Data
+
+  - name: Ex01 Initial data exploration
+    guidelines: |
+
+      Read the code, check that only the "purchases" data of "event\_type" collumn are collected
+    
+
+      Run the code and a 3 charts like in the subject should appear
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 20
+      name: Rigor
+    - percentage: 20
+      name: Algorithms & AI
+    - percentage: 20
+      name: DB & Data
+
+  - name: Ex02 My beautiful mustache Part 1
+    guidelines: |
+
+      Read the code, check that only the "purchases" data of "event\_type" collumn are collected
+    
+      Run the code, check the printing of the mean, median, min, max, first, second and third quartile,
+      then the display of a box plot amounting the prices of items sold on the site
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 10
+      name: Rigor
+    - percentage: 10
+      name: Algorithms & AI
+    - percentage: 10
+      name: DB & Data
+
+  - name: Ex02 My beautiful mustache Part 2
+    guidelines: |
+
+      Then a box plot with the average basket price per user
+
+      The student must be able to explain the box plots
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 10
+      name: Rigor
+    - percentage: 10
+      name: Algorithms & AI
+    - percentage: 10
+      name: DB & Data
+
+  - name: Ex03 Highest Building
+    guidelines: |
+
+      Two bart charts must have been generated, they must have the same information as in the subject
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 10
+      name: Rigor
+    - percentage: 10
+      name: Algorithms & AI
+    - percentage: 10
+      name: DB & Data
+
+  - name: Ex04 Elbow
+    guidelines: |
+
+      An elbow curve should be displayed
+      The student must be able to explain how many clusters he wants to keep and why
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 10
+      name: Rigor
+    - percentage: 10
+      name: Algorithms & AI
+    - percentage: 10
+      name: DB & Data
+
+  - name: Ex05 Clustering
+    guidelines: |
+
+      The student must be able to explain the Clustering Algorithms used
+      It must have the same number of clusters as said in the previous exercise
+      At least two graphs must be displayed
+      The student must be able to explain in each group what type of customer is in it
+
+    rating: bool        # bool = YES OR NO ---- multi = up to FIVE
+    kind: standard      # or bonus
+    questions_skills:
+    - percentage: 30
+      name: Rigor
+    - percentage: 30
+      name: Algorithms & AI
+    - percentage: 30
+      name: DB & Data

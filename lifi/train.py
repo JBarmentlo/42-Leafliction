@@ -26,6 +26,8 @@ def get_label_probabilities(db: ImageDataset):
 def prepare_data(db: ImageDataset):
     torch.manual_seed(42)
     train_db, test_db = random_split(db, [0.7, 0.3])
+    db.save_subset(Path("data/train_images"), train_db.indices)
+    db.save_subset(Path("data/test_images"), test_db.indices)
     label_probas = get_label_probabilities(train_db)
     sampler = WeightedRandomSampler(label_probas, len(train_db))
     train_loader = DataLoader(train_db, 32, num_workers=4, sampler=sampler)
@@ -82,6 +84,7 @@ def train(
     data_folder = Path("./images")
     db = ImageDataset(data_folder)
     train_loader, test_loader = prepare_data(db)
+    
     transforms = get_transforms(db)
 
     net = BasicClassifier(num_classes=len(LabelEnum))
@@ -106,4 +109,4 @@ def train(
         report = eval_model(test_loader, net, device)
         print(report)
 
-    torch.save(net.state_dict(), "leaf_classifier.pt")
+    torch.save(net.state_dict(), "data/leaf_classifier.pt")
