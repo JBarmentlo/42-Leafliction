@@ -20,7 +20,8 @@ dependencies = [
     "torchvision",
     "seaborn",
     "fire",
-    "plantcv"
+    "plantcv",
+    "tqdm"
 ]
 
 [tool.setuptools.packages.find]

@@ -1,3 +1,4 @@
+#!python
 from fire import Fire
 from lifi.train import train
 
